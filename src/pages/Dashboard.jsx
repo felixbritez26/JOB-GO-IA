@@ -1,5 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import StatCard from "../components/StatCard";
+import JobCard from "../components/JobCard";
 
 function Dashboard() {
   return (
@@ -17,24 +18,47 @@ function Dashboard() {
             detail="+12 this week"
           />
 
-          <StatCard
-            title="Interviews"
-            value="6"
-            detail="+2 this week"
-          />
+          <StatCard title="Interviews" value="6" detail="+2 this week" />
 
-          <StatCard
-            title="Response Rate"
-            value="23%"
-            detail="+5% this month"
-          />
+          <StatCard title="Response Rate" value="23%" detail="+5% this month" />
 
-          <StatCard
-            title="Saved Jobs"
-            value="18"
-            detail="4 new today"
-          />
+          <StatCard title="Saved Jobs" value="18" detail="4 new today" />
         </div>
+
+        <section className="jobs-section">
+          <div className="section-header">
+            <div>
+              <h2>Recommended Opportunities</h2>
+              <p>Jobs selected based on your skills and profile.</p>
+            </div>
+          </div>
+
+          <div className="jobs-container">
+            <JobCard
+              title="Junior Full Stack Developer"
+              company="TechNova"
+              location="New York, NY"
+              match={94}
+              technologies={["React", "Python", "PostgreSQL"]}
+            />
+
+            <JobCard
+              title="Frontend Developer"
+              company="Pixel Labs"
+              location="Remote"
+              match={88}
+              technologies={["React", "JavaScript", "CSS"]}
+            />
+
+            <JobCard
+              title="Software Engineer"
+              company="CloudWorks"
+              location="New York, NY"
+              match={82}
+              technologies={["Python", "Flask", "SQL"]}
+            />
+          </div>
+        </section>
       </main>
     </div>
   );

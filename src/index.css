@@ -97,3 +97,74 @@ body {
   color: #22c55e;
   font-size: 13px;
 }
+/* Recommended Jobs */
+
+.jobs-section {
+  margin-top: 40px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.section-header p {
+  color: #94a3b8;
+}
+
+.jobs-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.job-card {
+  background: #111827;
+  border: 1px solid #243044;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.job-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.job-card h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.job-card-header p {
+  color: #94a3b8;
+}
+
+.match {
+  color: #22c55e;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.job-location {
+  color: #94a3b8;
+  margin: 18px 0;
+}
+
+.technology-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.technology-list span {
+  background: #1e293b;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+}
