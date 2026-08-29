@@ -5,6 +5,7 @@ import JobCard from "../components/JobCard";
 function Opportunities() {
   const [search, setSearch] = useState("");
 
+  const [locationFilter, setLocationFilter] = useState("All");
   const jobs = [
     {
       title: "Junior Full Stack Developer",
@@ -36,9 +37,16 @@ function Opportunities() {
     },
   ];
 
-  const filteredJobs = jobs.filter((job) =>
-    job.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredJobs = jobs.filter((job) => {
+    const matchesSearch = job.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesLocation =
+      locationFilter === "All" || job.location === locationFilter;
+
+    return matchesSearch && matchesLocation;
+  });
 
   return (
     <div className="dashboard">
@@ -47,7 +55,6 @@ function Opportunities() {
       <main className="dashboard-content">
         <h1>Opportunities</h1>
         <p>Jobs selected based on your profile and skills.</p>
-
         <div className="search-container">
           <input
             type="text"
@@ -55,8 +62,17 @@ function Opportunities() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
-        </div>
 
+          <select
+            value={locationFilter}
+            onChange={(event) => setLocationFilter(event.target.value)}
+          >
+            <option value="All">All Locations</option>
+            <option value="New York, NY">New York, NY</option>
+            <option value="Remote">Remote</option>
+          </select>
+        </div>
+        ;
         <div className="jobs-container">
           {filteredJobs.map((job) => (
             <JobCard
