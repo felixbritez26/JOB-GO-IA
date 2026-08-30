@@ -4,6 +4,7 @@ import JobCard from "../components/JobCard";
 
 function Opportunities() {
   const [search, setSearch] = useState("");
+  const [technologyFilter, setTechnologyFilter] = useState("All");
 
   const [locationFilter, setLocationFilter] = useState("All");
   const jobs = [
@@ -45,7 +46,10 @@ function Opportunities() {
     const matchesLocation =
       locationFilter === "All" || job.location === locationFilter;
 
-    return matchesSearch && matchesLocation;
+    const matchesTechnology =
+      technologyFilter === "All" || job.technologies.includes(technologyFilter);
+
+    return matchesSearch && matchesLocation && matchesTechnology;
   });
 
   return (
@@ -56,6 +60,17 @@ function Opportunities() {
         <h1>Opportunities</h1>
         <p>Jobs selected based on your profile and skills.</p>
         <div className="search-container">
+          <select
+            value={technologyFilter}
+            onChange={(event) => setTechnologyFilter(event.target.value)}
+          >
+            <option value="All">All Technologies</option>
+            <option value="React">React</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="Python">Python</option>
+            <option value="Flask">Flask</option>
+            <option value="PostgreSQL">PostgreSQL</option>
+          </select>
           <input
             type="text"
             placeholder="Search jobs..."
@@ -72,7 +87,7 @@ function Opportunities() {
             <option value="Remote">Remote</option>
           </select>
         </div>
-        ;
+        
         <div className="jobs-container">
           {filteredJobs.map((job) => (
             <JobCard
