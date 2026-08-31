@@ -190,3 +190,41 @@ body {
 .sidebar nav p:hover {
   background: #1f2937;
 }
+/* Opportunities filters */
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 28px 0;
+}
+
+.search-container input,
+.search-container select {
+  background: #111827;
+  border: 1px solid #273449;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 15px;
+  padding: 13px 16px;
+  outline: none;
+}
+
+.search-container input {
+  flex: 1;
+  max-width: 450px;
+}
+
+.search-container select {
+  min-width: 180px;
+  cursor: pointer;
+}
+
+.search-container input:focus,
+.search-container select:focus {
+  border-color: #6d4aff;
+}
+
+.search-container input::placeholder {
+  color: #8fa3bf;
+}

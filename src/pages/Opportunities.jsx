@@ -5,6 +5,7 @@ import JobCard from "../components/JobCard";
 function Opportunities() {
   const [search, setSearch] = useState("");
   const [technologyFilter, setTechnologyFilter] = useState("All");
+  const [savedJobs, setSavedJobs] = useState([]);
 
   const [locationFilter, setLocationFilter] = useState("All");
   const jobs = [
@@ -37,6 +38,14 @@ function Opportunities() {
       technologies: ["JavaScript", "React", "REST API"],
     },
   ];
+  
+  const handleSaveJob = (jobTitle) => {
+    if (savedJobs.includes(jobTitle)) {
+      setSavedJobs(savedJobs.filter((title) => title !== jobTitle));
+    } else {
+      setSavedJobs([...savedJobs, jobTitle]);
+    }
+  };
 
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch = job.title
@@ -60,17 +69,6 @@ function Opportunities() {
         <h1>Opportunities</h1>
         <p>Jobs selected based on your profile and skills.</p>
         <div className="search-container">
-          <select
-            value={technologyFilter}
-            onChange={(event) => setTechnologyFilter(event.target.value)}
-          >
-            <option value="All">All Technologies</option>
-            <option value="React">React</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="Python">Python</option>
-            <option value="Flask">Flask</option>
-            <option value="PostgreSQL">PostgreSQL</option>
-          </select>
           <input
             type="text"
             placeholder="Search jobs..."
@@ -86,19 +84,35 @@ function Opportunities() {
             <option value="New York, NY">New York, NY</option>
             <option value="Remote">Remote</option>
           </select>
+
+          <select
+            value={technologyFilter}
+            onChange={(event) => setTechnologyFilter(event.target.value)}
+          >
+            <option value="All">All Technologies</option>
+            <option value="React">React</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="Python">Python</option>
+            <option value="Flask">Flask</option>
+            <option value="PostgreSQL">PostgreSQL</option>
+          </select>
         </div>
-        
+
         <div className="jobs-container">
-          {filteredJobs.map((job) => (
-            <JobCard
-              key={job.title}
-              title={job.title}
-              company={job.company}
-              location={job.location}
-              match={job.match}
-              technologies={job.technologies}
-            />
-          ))}
+          {filteredJobs.length > 0 ? (
+            filteredJobs.map((job) => (
+              <JobCard
+                key={job.title}
+                title={job.title}
+                company={job.company}
+                location={job.location}
+                match={job.match}
+                technologies={job.technologies}
+              />
+            ))
+          ) : (
+            <p className="no-jobs">No jobs found.</p>
+          )}
         </div>
       </main>
     </div>
