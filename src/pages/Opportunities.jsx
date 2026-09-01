@@ -5,7 +5,11 @@ import JobCard from "../components/JobCard";
 function Opportunities() {
   const [search, setSearch] = useState("");
   const [technologyFilter, setTechnologyFilter] = useState("All");
-  const [savedJobs, setSavedJobs] = useState([]);
+  const [savedJobs, setSavedJobs] = useState(() => {
+  const storedJobs = localStorage.getItem("savedJobs");
+
+  return storedJobs ? JSON.parse(storedJobs) : [];
+});
 
   const [locationFilter, setLocationFilter] = useState("All");
   const jobs = [
