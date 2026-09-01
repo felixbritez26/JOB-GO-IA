@@ -1,4 +1,12 @@
-function JobCard({ title, company, location, match, technologies }) {
+function JobCard({
+  title,
+  company,
+  location,
+  match,
+  technologies,
+  onSave,
+  saved,
+}) {
   return (
     <div className="job-card">
       <div className="job-card-header">
@@ -9,6 +17,13 @@ function JobCard({ title, company, location, match, technologies }) {
 
         <span className="match">{match}% match</span>
       </div>
+
+      <button
+        className={`save-job-btn ${saved ? "saved" : ""}`}
+        onClick={onSave}
+      >
+        {saved ? "Saved" : "Save Job"}
+      </button>
 
       <p className="job-location">{location}</p>
 

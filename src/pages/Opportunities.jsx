@@ -38,7 +38,7 @@ function Opportunities() {
       technologies: ["JavaScript", "React", "REST API"],
     },
   ];
-  
+
   const handleSaveJob = (jobTitle) => {
     if (savedJobs.includes(jobTitle)) {
       setSavedJobs(savedJobs.filter((title) => title !== jobTitle));
@@ -108,6 +108,8 @@ function Opportunities() {
                 location={job.location}
                 match={job.match}
                 technologies={job.technologies}
+                onSave={() => handleSaveJob(job.title)}
+                saved={savedJobs.includes(job.title)}
               />
             ))
           ) : (
