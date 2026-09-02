@@ -9,7 +9,7 @@ function Sidebar() {
       <nav>
         <Link to="/">Dashboard</Link>
         <Link to="/opportunities">Opportunities</Link>
-        <p>Applications</p>
+        <Link to="/applications">Applications</Link>
         <p>Interviews</p>
         <p>Skills & Growth</p>
         <p>Projects</p>

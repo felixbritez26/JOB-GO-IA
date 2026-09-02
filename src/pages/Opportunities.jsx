@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import JobCard from "../components/JobCard";
 
@@ -6,10 +6,14 @@ function Opportunities() {
   const [search, setSearch] = useState("");
   const [technologyFilter, setTechnologyFilter] = useState("All");
   const [savedJobs, setSavedJobs] = useState(() => {
-  const storedJobs = localStorage.getItem("savedJobs");
+    const storedJobs = localStorage.getItem("savedJobs");
 
-  return storedJobs ? JSON.parse(storedJobs) : [];
-});
+    return storedJobs ? JSON.parse(storedJobs) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
+  }, [savedJobs]);
 
   const [locationFilter, setLocationFilter] = useState("All");
   const jobs = [
