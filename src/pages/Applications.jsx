@@ -1,27 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 
+const initialApplications = [
+  {
+    company: "TechNova",
+    position: "Junior Full Stack Developer",
+    status: "Applied",
+    date: "Sep 1, 2026",
+  },
+  {
+    company: "Pixel Labs",
+    position: "Frontend Developer",
+    status: "Interview",
+    date: "Aug 29, 2026",
+  },
+  {
+    company: "CloudWorks",
+    position: "Software Engineer",
+    status: "Rejected",
+    date: "Aug 25, 2026",
+  },
+];
+
 function Applications() {
-  const [applications, setApplications] = useState([
-    {
-      company: "TechNova",
-      position: "Junior Full Stack Developer",
-      status: "Applied",
-      date: "Sep 1, 2026",
-    },
-    {
-      company: "Pixel Labs",
-      position: "Frontend Developer",
-      status: "Interview",
-      date: "Aug 29, 2026",
-    },
-    {
-      company: "CloudWorks",
-      position: "Software Engineer",
-      status: "Rejected",
-      date: "Aug 25, 2026",
-    },
-  ]);
+  const [applications, setApplications] = useState(() => {
+    const storedApplications = localStorage.getItem("applications");
+
+    return storedApplications
+      ? JSON.parse(storedApplications)
+      : initialApplications;
+  });
 
   const handleStatusChange = (position, newStatus) => {
     const updatedApplications = applications.map((application) => {
