@@ -31,6 +31,14 @@ function Applications() {
       : initialApplications;
   });
 
+  const [company, setCompany] = useState("");
+  const [position, setPosition] = useState("");
+  const [status, setStatus] = useState("Applied");
+  
+  useEffect(() => {
+    localStorage.setItem("applications", JSON.stringify(applications));
+  }, [applications]);
+
   const handleStatusChange = (position, newStatus) => {
     const updatedApplications = applications.map((application) => {
       if (application.position === position) {
