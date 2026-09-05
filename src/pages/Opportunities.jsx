@@ -54,6 +54,24 @@ function Opportunities() {
       setSavedJobs([...savedJobs, jobTitle]);
     }
   };
+  const handleApplyJob = (job) => {
+    const storedApplications = localStorage.getItem("applications");
+
+    const applications = storedApplications
+      ? JSON.parse(storedApplications)
+      : [];
+
+    const newApplication = {
+      company: job.company,
+      position: job.title,
+      status: "Applied",
+      date: new Date().toLocaleDateString(),
+    };
+
+    const updatedApplications = [...applications, newApplication];
+
+    localStorage.setItem("applications", JSON.stringify(updatedApplications));
+  };
 
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch = job.title
@@ -118,6 +136,7 @@ function Opportunities() {
                 technologies={job.technologies}
                 onSave={() => handleSaveJob(job.title)}
                 saved={savedJobs.includes(job.title)}
+                onApply={() => handleApplyJob(job)}
               />
             ))
           ) : (

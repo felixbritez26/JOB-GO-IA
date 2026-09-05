@@ -71,6 +71,14 @@ function Applications() {
     setApplications(updatedApplications);
   };
 
+  const handleDeleteApplication = (position) => {
+    const updatedApplications = applications.filter(
+      (application) => application.position !== position,
+    );
+
+    setApplications(updatedApplications);
+  };
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -129,6 +137,12 @@ function Applications() {
                 <option value="Rejected">Rejected</option>
                 <option value="Offer">Offer</option>
               </select>
+              <button
+                className="delete-application-btn"
+                onClick={() => handleDeleteApplication(application.position)}
+              >
+                Delete
+              </button>
             </div>
           ))}
         </div>

@@ -6,6 +6,8 @@ function JobCard({
   technologies,
   onSave,
   saved,
+  onApply,
+  applied,
 }) {
   return (
     <div className="job-card">
@@ -17,6 +19,9 @@ function JobCard({
 
         <span className="match">{match}% match</span>
       </div>
+      <button className="apply-job-btn" onClick={onApply} disabled={applied}>
+        {applied ? "Applied" : "Apply"}
+      </button>
 
       <button
         className={`save-job-btn ${saved ? "saved" : ""}`}
