@@ -4,6 +4,15 @@ import JobCard from "../components/JobCard";
 
 function Opportunities() {
   const [search, setSearch] = useState("");
+  const [appliedJobs, setAppliedJobs] = useState(() => {
+    const storedApplications = localStorage.getItem("applications");
+
+    if (!storedApplications) return [];
+
+    const applications = JSON.parse(storedApplications);
+
+    return applications.map((application) => application.position);
+  });
   const [technologyFilter, setTechnologyFilter] = useState("All");
   const [savedJobs, setSavedJobs] = useState(() => {
     const storedJobs = localStorage.getItem("savedJobs");
@@ -55,6 +64,10 @@ function Opportunities() {
     }
   };
   const handleApplyJob = (job) => {
+    if (appliedJobs.includes(job.title)) {
+      return;
+    }
+
     const storedApplications = localStorage.getItem("applications");
 
     const applications = storedApplications
@@ -71,6 +84,8 @@ function Opportunities() {
     const updatedApplications = [...applications, newApplication];
 
     localStorage.setItem("applications", JSON.stringify(updatedApplications));
+
+    setAppliedJobs([...appliedJobs, job.title]);
   };
 
   const filteredJobs = jobs.filter((job) => {
@@ -137,6 +152,7 @@ function Opportunities() {
                 onSave={() => handleSaveJob(job.title)}
                 saved={savedJobs.includes(job.title)}
                 onApply={() => handleApplyJob(job)}
+                applied={appliedJobs.includes(job.title)}
               />
             ))
           ) : (
