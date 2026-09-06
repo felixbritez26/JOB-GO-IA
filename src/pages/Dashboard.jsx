@@ -1,8 +1,17 @@
 import Sidebar from "../components/Sidebar";
 import StatCard from "../components/StatCard";
 import JobCard from "../components/JobCard";
+import { useState } from "react";
 
 function Dashboard() {
+  const interviewCount = applications.filter(
+    (application) => application.status === "Interview",
+  ).length;
+  const [applications] = useState(() => {
+    const storedApplications = localStorage.getItem("applications");
+
+    return storedApplications ? JSON.parse(storedApplications) : [];
+  });
   return (
     <div className="dashboard">
       <Sidebar />

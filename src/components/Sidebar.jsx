@@ -10,7 +10,7 @@ function Sidebar() {
         <Link to="/">Dashboard</Link>
         <Link to="/opportunities">Opportunities</Link>
         <Link to="/applications">Applications</Link>
-        <p>Interviews</p>
+        <Link to="/interviews">Interviews</Link>
         <p>Skills & Growth</p>
         <p>Projects</p>
       </nav>
