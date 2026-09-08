@@ -4,14 +4,21 @@ import JobCard from "../components/JobCard";
 import { useState } from "react";
 
 function Dashboard() {
-  const interviewCount = applications.filter(
-    (application) => application.status === "Interview",
-  ).length;
+  const [savedJobs] = useState(() => {
+    const storedJobs = localStorage.getItem("savedJobs");
+
+    return storedJobs ? JSON.parse(storedJobs) : [];
+  });
   const [applications] = useState(() => {
     const storedApplications = localStorage.getItem("applications");
 
     return storedApplications ? JSON.parse(storedApplications) : [];
   });
+
+  const interviewCount = applications.filter(
+    (application) => application.status === "Interview",
+  ).length;
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -23,15 +30,23 @@ function Dashboard() {
         <div className="stats-container">
           <StatCard
             title="Applications Sent"
-            value="47"
-            detail="+12 this week"
+            value={applications.length}
+            detail="Total applications"
           />
 
-          <StatCard title="Interviews" value="6" detail="+2 this week" />
+          <StatCard
+            title="Interviews"
+            value={interviewCount}
+            detail="Current interviews"
+          />
 
           <StatCard title="Response Rate" value="23%" detail="+5% this month" />
 
-          <StatCard title="Saved Jobs" value="18" detail="4 new today" />
+          <StatCard
+            title="Saved Jobs"
+            value={savedJobs.length}
+            detail="Total saved jobs"
+          />
         </div>
 
         <section className="jobs-section">
