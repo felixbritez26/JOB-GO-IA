@@ -19,6 +19,11 @@ function Dashboard() {
     (application) => application.status === "Interview",
   ).length;
 
+  const responseRate =
+    applications.length > 0
+      ? Math.round((interviewCount / applications.length) * 100)
+      : 0;
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -40,7 +45,11 @@ function Dashboard() {
             detail="Current interviews"
           />
 
-          <StatCard title="Response Rate" value="23%" detail="+5% this month" />
+          <StatCard
+            title="Response Rate"
+            value={`${responseRate}%`}
+            detail="Interview response rate"
+          />
 
           <StatCard
             title="Saved Jobs"
