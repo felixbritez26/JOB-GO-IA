@@ -2,6 +2,11 @@ import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 
 function Interviews() {
+  const [scheduledInterviews, setScheduledInterviews] = useState(() => {
+    const storedInterviews = localStorage.getItem("scheduledInterviews");
+
+    return storedInterviews ? JSON.parse(storedInterviews) : [];
+  });
   const [interviewDate, setInterviewDate] = useState("");
   const [interviewTime, setInterviewTime] = useState("");
   const [interviewType, setInterviewType] = useState("Video Call");
@@ -16,6 +21,37 @@ function Interviews() {
   const interviews = applications.filter(
     (application) => application.status === "Interview",
   );
+
+  const handleSaveInterview = (application) => {
+    const interviewDetails = {
+      company: application.company,
+      position: application.position,
+      date: interviewDate,
+      time: interviewTime,
+      type: interviewType,
+      notes: notes,
+    };
+    
+
+    const storedInterviews = localStorage.getItem("scheduledInterviews");
+
+    const scheduledInterviews = storedInterviews
+      ? JSON.parse(storedInterviews)
+      : [];
+
+    const updatedInterviews = [...scheduledInterviews, interviewDetails];
+
+    localStorage.setItem(
+      "scheduledInterviews",
+      JSON.stringify(updatedInterviews),
+    );
+
+    setSelectedInterview(null);
+    setInterviewDate("");
+    setInterviewTime("");
+    setInterviewType("Video Call");
+    setNotes("");
+  };
 
   return (
     <div className="dashboard">
@@ -73,7 +109,9 @@ function Interviews() {
                       onChange={(event) => setNotes(event.target.value)}
                     />
 
-                    <button>Save Interview</button>
+                    <button onClick={() => handleSaveInterview(application)}>
+                      Save Interview
+                    </button>
                   </div>
                 )}
               </div>
