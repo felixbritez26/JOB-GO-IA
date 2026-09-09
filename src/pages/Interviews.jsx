@@ -7,11 +7,13 @@ function Interviews() {
 
     return storedInterviews ? JSON.parse(storedInterviews) : [];
   });
+
   const [interviewDate, setInterviewDate] = useState("");
   const [interviewTime, setInterviewTime] = useState("");
   const [interviewType, setInterviewType] = useState("Video Call");
   const [notes, setNotes] = useState("");
   const [selectedInterview, setSelectedInterview] = useState(null);
+
   const [applications] = useState(() => {
     const storedApplications = localStorage.getItem("applications");
 
@@ -31,15 +33,10 @@ function Interviews() {
       type: interviewType,
       notes: notes,
     };
-    
-
-    const storedInterviews = localStorage.getItem("scheduledInterviews");
-
-    const scheduledInterviews = storedInterviews
-      ? JSON.parse(storedInterviews)
-      : [];
 
     const updatedInterviews = [...scheduledInterviews, interviewDetails];
+
+    setScheduledInterviews(updatedInterviews);
 
     localStorage.setItem(
       "scheduledInterviews",
@@ -73,30 +70,37 @@ function Interviews() {
                 <p>{application.date}</p>
 
                 <span className="status interview">Interview</span>
+
                 <button
                   className="schedule-interview-btn"
                   onClick={() => setSelectedInterview(application.position)}
                 >
                   Schedule Interview
                 </button>
+
                 {selectedInterview === application.position && (
                   <div className="interview-form">
-                    {/* ✅ NEW CONTROLLED INPUTS */}
                     <input
                       type="date"
                       value={interviewDate}
-                      onChange={(event) => setInterviewDate(event.target.value)}
+                      onChange={(event) =>
+                        setInterviewDate(event.target.value)
+                      }
                     />
 
                     <input
                       type="time"
                       value={interviewTime}
-                      onChange={(event) => setInterviewTime(event.target.value)}
+                      onChange={(event) =>
+                        setInterviewTime(event.target.value)
+                      }
                     />
 
                     <select
                       value={interviewType}
-                      onChange={(event) => setInterviewType(event.target.value)}
+                      onChange={(event) =>
+                        setInterviewType(event.target.value)
+                      }
                     >
                       <option value="Video Call">Video Call</option>
                       <option value="Phone Call">Phone Call</option>
@@ -109,7 +113,9 @@ function Interviews() {
                       onChange={(event) => setNotes(event.target.value)}
                     />
 
-                    <button onClick={() => handleSaveInterview(application)}>
+                    <button
+                      onClick={() => handleSaveInterview(application)}
+                    >
                       Save Interview
                     </button>
                   </div>
