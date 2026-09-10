@@ -93,6 +93,30 @@ function Interviews() {
     setSelectedInterview(application.position);
   };
 
+  const handleCancelInterview = () => {
+    setSelectedInterview(null);
+    setInterviewDate("");
+    setInterviewTime("");
+    setInterviewType("Video Call");
+    setNotes("");
+  };
+  const handleDeleteInterview = (application) => {
+    const updatedInterviews = scheduledInterviews.filter(
+      (interview) =>
+        !(
+          interview.company === application.company &&
+          interview.position === application.position
+        ),
+    );
+
+    setScheduledInterviews(updatedInterviews);
+
+    localStorage.setItem(
+      "scheduledInterviews",
+      JSON.stringify(updatedInterviews),
+    );
+  };
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -127,6 +151,13 @@ function Interviews() {
                       <p>Type: {interview.type}</p>
 
                       {interview.notes && <p>Notes: {interview.notes}</p>}
+
+                      <button
+                        className="delete-interview-btn"
+                        onClick={() => handleDeleteInterview(application)}
+                      >
+                        Delete Interview
+                      </button>
                     </div>
                   ))}
 
@@ -134,7 +165,13 @@ function Interviews() {
                   className="schedule-interview-btn"
                   onClick={() => handleOpenInterview(application)}
                 >
-                  Schedule Interview
+                  {scheduledInterviews.some(
+                    (interview) =>
+                      interview.company === application.company &&
+                      interview.position === application.position,
+                  )
+                    ? "Edit Interview"
+                    : "Schedule Interview"}
                 </button>
 
                 {selectedInterview === application.position && (
@@ -168,6 +205,14 @@ function Interviews() {
 
                     <button onClick={() => handleSaveInterview(application)}>
                       Save Interview
+                    </button>
+
+                    <button
+                      type="button"
+                      className="cancel-interview-btn"
+                      onClick={handleCancelInterview}
+                    >
+                      Cancel
                     </button>
                   </div>
                 )}
