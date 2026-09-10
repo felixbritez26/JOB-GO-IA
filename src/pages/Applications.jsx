@@ -86,12 +86,14 @@ function Applications() {
       <main className="dashboard-content">
         <h1>Applications</h1>
         <p>Track the jobs you have applied to.</p>
+
         <form className="application-form" onSubmit={handleAddApplication}>
           <input
             type="text"
             placeholder="Company"
             value={company}
             onChange={(event) => setCompany(event.target.value)}
+            required
           />
 
           <input
@@ -99,6 +101,7 @@ function Applications() {
             placeholder="Position"
             value={position}
             onChange={(event) => setPosition(event.target.value)}
+            required
           />
 
           <select
@@ -123,9 +126,11 @@ function Applications() {
               <h3>{application.position}</h3>
               <p>{application.company}</p>
               <p>{application.date}</p>
+
               <span className={`status ${application.status.toLowerCase()}`}>
                 {application.status}
               </span>
+
               <select
                 value={application.status}
                 onChange={(event) =>
@@ -137,6 +142,7 @@ function Applications() {
                 <option value="Rejected">Rejected</option>
                 <option value="Offer">Offer</option>
               </select>
+
               <button
                 className="delete-application-btn"
                 onClick={() => handleDeleteApplication(application.position)}

@@ -34,7 +34,28 @@ function Interviews() {
       notes: notes,
     };
 
-    const updatedInterviews = [...scheduledInterviews, interviewDetails];
+    const interviewExists = scheduledInterviews.some(
+      (interview) =>
+        interview.company === application.company &&
+        interview.position === application.position,
+    );
+
+    let updatedInterviews;
+
+    if (interviewExists) {
+      updatedInterviews = scheduledInterviews.map((interview) => {
+        if (
+          interview.company === application.company &&
+          interview.position === application.position
+        ) {
+          return interviewDetails;
+        }
+
+        return interview;
+      });
+    } else {
+      updatedInterviews = [...scheduledInterviews, interviewDetails];
+    }
 
     setScheduledInterviews(updatedInterviews);
 
@@ -48,6 +69,28 @@ function Interviews() {
     setInterviewTime("");
     setInterviewType("Video Call");
     setNotes("");
+  };
+
+  const handleOpenInterview = (application) => {
+    const existingInterview = scheduledInterviews.find(
+      (interview) =>
+        interview.company === application.company &&
+        interview.position === application.position,
+    );
+
+    if (existingInterview) {
+      setInterviewDate(existingInterview.date);
+      setInterviewTime(existingInterview.time);
+      setInterviewType(existingInterview.type);
+      setNotes(existingInterview.notes);
+    } else {
+      setInterviewDate("");
+      setInterviewTime("");
+      setInterviewType("Video Call");
+      setNotes("");
+    }
+
+    setSelectedInterview(application.position);
   };
 
   return (
@@ -71,9 +114,25 @@ function Interviews() {
 
                 <span className="status interview">Interview</span>
 
+                {scheduledInterviews
+                  .filter(
+                    (interview) =>
+                      interview.company === application.company &&
+                      interview.position === application.position,
+                  )
+                  .map((interview, index) => (
+                    <div className="interview-details" key={index}>
+                      <p>Date: {interview.date}</p>
+                      <p>Time: {interview.time}</p>
+                      <p>Type: {interview.type}</p>
+
+                      {interview.notes && <p>Notes: {interview.notes}</p>}
+                    </div>
+                  ))}
+
                 <button
                   className="schedule-interview-btn"
-                  onClick={() => setSelectedInterview(application.position)}
+                  onClick={() => handleOpenInterview(application)}
                 >
                   Schedule Interview
                 </button>
@@ -83,24 +142,18 @@ function Interviews() {
                     <input
                       type="date"
                       value={interviewDate}
-                      onChange={(event) =>
-                        setInterviewDate(event.target.value)
-                      }
+                      onChange={(event) => setInterviewDate(event.target.value)}
                     />
 
                     <input
                       type="time"
                       value={interviewTime}
-                      onChange={(event) =>
-                        setInterviewTime(event.target.value)
-                      }
+                      onChange={(event) => setInterviewTime(event.target.value)}
                     />
 
                     <select
                       value={interviewType}
-                      onChange={(event) =>
-                        setInterviewType(event.target.value)
-                      }
+                      onChange={(event) => setInterviewType(event.target.value)}
                     >
                       <option value="Video Call">Video Call</option>
                       <option value="Phone Call">Phone Call</option>
@@ -113,9 +166,7 @@ function Interviews() {
                       onChange={(event) => setNotes(event.target.value)}
                     />
 
-                    <button
-                      onClick={() => handleSaveInterview(application)}
-                    >
+                    <button onClick={() => handleSaveInterview(application)}>
                       Save Interview
                     </button>
                   </div>
