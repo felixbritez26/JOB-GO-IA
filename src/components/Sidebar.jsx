@@ -11,7 +11,7 @@ function Sidebar() {
         <Link to="/opportunities">Opportunities</Link>
         <Link to="/applications">Applications</Link>
         <Link to="/interviews">Interviews</Link>
-        <p>Skills & Growth</p>
+        <Link to="/skills">Skills & Growth</Link>
         <p>Projects</p>
       </nav>
     </aside>
