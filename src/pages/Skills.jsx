@@ -10,6 +10,25 @@ function Skills() {
     { name: "PostgreSQL", level: 65 },
   ]);
 
+  const [skillName, setSkillName] = useState("");
+  const [skillLevel, setSkillLevel] = useState("");
+
+  const handleAddSkill = () => {
+    if (!skillName || !skillLevel) {
+      return;
+    }
+
+    const newSkill = {
+      name: skillName,
+      level: Number(skillLevel),
+    };
+
+    setSkills([...skills, newSkill]);
+
+    setSkillName("");
+    setSkillLevel("");
+  };
+
   return (
     <div className="dashboard">
       <Sidebar />
@@ -19,11 +38,23 @@ function Skills() {
         <p>Track your technical skills and development progress.</p>
 
         <div className="skill-form">
-          <input type="text" placeholder="Skill name" />
+          <input
+            type="text"
+            placeholder="Skill name"
+            value={skillName}
+            onChange={(event) => setSkillName(event.target.value)}
+          />
 
-          <input type="number" placeholder="Level" min="0" max="100" />
+          <input
+            type="number"
+            placeholder="Level"
+            min="0"
+            max="100"
+            value={skillLevel}
+            onChange={(event) => setSkillLevel(event.target.value)}
+          />
 
-          <button>Add Skill</button>
+          <button onClick={handleAddSkill}>Add Skill</button>
         </div>
 
         <div className="skills-container">
