@@ -1,17 +1,27 @@
 import Sidebar from "../components/Sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Skills() {
-  const [skills, setSkills] = useState([
-    { name: "React", level: 85 },
-    { name: "JavaScript", level: 80 },
-    { name: "Python", level: 75 },
-    { name: "Flask", level: 70 },
-    { name: "PostgreSQL", level: 65 },
-  ]);
+  const [skills, setSkills] = useState(() => {
+    const storedSkills = localStorage.getItem("skills");
+
+    return storedSkills
+      ? JSON.parse(storedSkills)
+      : [
+          { name: "React", level: 85 },
+          { name: "JavaScript", level: 80 },
+          { name: "Python", level: 75 },
+          { name: "Flask", level: 70 },
+          { name: "PostgreSQL", level: 65 },
+        ];
+  });
 
   const [skillName, setSkillName] = useState("");
   const [skillLevel, setSkillLevel] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("skills", JSON.stringify(skills));
+  }, [skills]);
 
   const handleAddSkill = () => {
     if (!skillName || !skillLevel) {
@@ -27,6 +37,12 @@ function Skills() {
 
     setSkillName("");
     setSkillLevel("");
+  };
+
+  const handleDeleteSkill = (skillName) => {
+    const updatedSkills = skills.filter((skill) => skill.name !== skillName);
+
+    setSkills(updatedSkills);
   };
 
   return (
@@ -70,6 +86,9 @@ function Skills() {
                   style={{ width: `${skill.level}%` }}
                 ></div>
               </div>
+              <button onClick={() => handleDeleteSkill(skill.name)}>
+                Delete
+              </button>
             </div>
           ))}
         </div>
