@@ -18,6 +18,7 @@ function Skills() {
 
   const [skillName, setSkillName] = useState("");
   const [skillLevel, setSkillLevel] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     localStorage.setItem("skills", JSON.stringify(skills));
@@ -27,6 +28,20 @@ function Skills() {
     if (!skillName || !skillLevel) {
       return;
     }
+
+    // 👇 PUT THE NEW CODE HERE
+    const skillExists = skills.some(
+      (skill) => skill.name.toLowerCase() === skillName.toLowerCase(),
+    );
+
+    if (skillExists) {
+      setError("This skill already exists.");
+      return;
+    }
+
+    setError("");
+
+    // 👆 END OF NEW CODE
 
     const newSkill = {
       name: skillName,
