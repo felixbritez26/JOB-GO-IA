@@ -497,3 +497,50 @@ body {
   background: #6d4aff;
   border-radius: 20px;
 }
+.skill-form {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.skill-form input {
+  padding: 11px 14px;
+  background: #111827;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: white;
+  outline: none;
+}
+
+.skill-form input:focus {
+  border-color: #6d4aff;
+}
+
+.skill-form button {
+  padding: 11px 18px;
+  background: #6d4aff;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.skill-error {
+  color: #f87171;
+  margin-bottom: 16px;
+}
+
+.skill-card > button {
+  margin-top: 14px;
+  padding: 7px 12px;
+  background: transparent;
+  border: 1px solid #ef4444;
+  border-radius: 7px;
+  color: #f87171;
+  cursor: pointer;
+}
+
+.skill-card > button:hover {
+  background: rgba(239, 68, 68, 0.12);
+}

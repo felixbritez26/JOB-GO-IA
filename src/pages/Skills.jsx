@@ -26,10 +26,17 @@ function Skills() {
 
   const handleAddSkill = () => {
     if (!skillName || !skillLevel) {
+      setError("Please complete all fields.");
       return;
     }
 
-    // 👇 PUT THE NEW CODE HERE
+    const level = Number(skillLevel);
+
+    if (level < 0 || level > 100) {
+      setError("Skill level must be between 0 and 100.");
+      return;
+    }
+
     const skillExists = skills.some(
       (skill) => skill.name.toLowerCase() === skillName.toLowerCase(),
     );
@@ -41,11 +48,9 @@ function Skills() {
 
     setError("");
 
-    // 👆 END OF NEW CODE
-
     const newSkill = {
       name: skillName,
-      level: Number(skillLevel),
+      level: level,
     };
 
     setSkills([...skills, newSkill]);
@@ -87,6 +92,8 @@ function Skills() {
 
           <button onClick={handleAddSkill}>Add Skill</button>
         </div>
+
+        {error && <p className="skill-error">{error}</p>}
 
         <div className="skills-container">
           {skills.map((skill) => (
