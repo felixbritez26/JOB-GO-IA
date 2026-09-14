@@ -19,16 +19,20 @@ function JobCard({
 
         <span className="match">{match}% match</span>
       </div>
-      <button className="apply-job-btn" onClick={onApply} disabled={applied}>
-        {applied ? "Applied" : "Apply"}
-      </button>
+      {onApply && (
+        <button className="apply-job-btn" onClick={onApply} disabled={applied}>
+          {applied ? "Applied" : "Apply"}
+        </button>
+      )}
 
-      <button
-        className={`save-job-btn ${saved ? "saved" : ""}`}
-        onClick={onSave}
-      >
-        {saved ? "Saved" : "Save Job"}
-      </button>
+      {onSave && (
+        <button
+          className={`save-job-btn ${saved ? "saved" : ""}`}
+          onClick={onSave}
+        >
+          {saved ? "Saved" : "Save Job"}
+        </button>
+      )}
 
       <p className="job-location">{location}</p>
 
