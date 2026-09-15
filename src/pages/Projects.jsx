@@ -5,6 +5,9 @@ function Projects() {
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [projectStatus, setProjectStatus] = useState("In Progress");
+  const [projectTechnologies, setProjectTechnologies] = useState("");
+  const [projectGithub, setProjectGithub] = useState("");
+  const [projectDemo, setProjectDemo] = useState("");
   const [projects, setProjects] = useState(() => {
     const storedProjects = localStorage.getItem("projects");
 
@@ -42,10 +45,12 @@ function Projects() {
     const newProject = {
       name: projectName,
       description: projectDescription,
-      technologies: [],
+      technologies: projectTechnologies
+        .split(",")
+        .map((technology) => technology.trim()),
       status: projectStatus,
-      github: "#",
-      demo: "#",
+      github: projectGithub || "#",
+      demo: projectDemo || "#",
     };
 
     setProjects([...projects, newProject]);
@@ -82,6 +87,27 @@ function Projects() {
             placeholder="Project description"
             value={projectDescription}
             onChange={(event) => setProjectDescription(event.target.value)}
+          />
+
+          <input
+            type="text"
+            placeholder="Technologies (React, Flask, PostgreSQL)"
+            value={projectTechnologies}
+            onChange={(event) => setProjectTechnologies(event.target.value)}
+          />
+
+          <input
+            type="text"
+            placeholder="GitHub URL"
+            value={projectGithub}
+            onChange={(event) => setProjectGithub(event.target.value)}
+          />
+
+          <input
+            type="text"
+            placeholder="Live Demo URL"
+            value={projectDemo}
+            onChange={(event) => setProjectDemo(event.target.value)}
           />
 
           <select
