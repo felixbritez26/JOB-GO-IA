@@ -567,3 +567,24 @@ body {
   color: #8fa3bf;
   line-height: 1.5;
 }
+.project-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.project-actions a {
+  padding: 9px 16px;
+  border-radius: 8px;
+  background: #6d4aff;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.project-actions a:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
