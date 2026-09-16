@@ -47,7 +47,8 @@ function Projects() {
       description: projectDescription,
       technologies: projectTechnologies
         .split(",")
-        .map((technology) => technology.trim()),
+        .map((technology) => technology.trim())
+        .filter((technology) => technology !== ""),
       status: projectStatus,
       github: projectGithub || "#",
       demo: projectDemo || "#",
@@ -58,6 +59,9 @@ function Projects() {
     setProjectName("");
     setProjectDescription("");
     setProjectStatus("In Progress");
+    setProjectTechnologies("");
+    setProjectGithub("");
+    setProjectDemo("");
   };
   const handleDeleteProject = (projectName) => {
     const updatedProjects = projects.filter(
