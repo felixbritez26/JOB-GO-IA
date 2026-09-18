@@ -25,36 +25,7 @@ function Opportunities() {
   }, [savedJobs]);
 
   const [locationFilter, setLocationFilter] = useState("All");
-  const jobs = [
-    {
-      title: "Junior Full Stack Developer",
-      company: "TechNova",
-      location: "New York, NY",
-      match: 94,
-      technologies: ["React", "Python", "PostgreSQL"],
-    },
-    {
-      title: "Frontend Developer",
-      company: "Pixel Labs",
-      location: "Remote",
-      match: 88,
-      technologies: ["React", "JavaScript", "CSS"],
-    },
-    {
-      title: "Backend Developer",
-      company: "Nova Systems",
-      location: "New York, NY",
-      match: 86,
-      technologies: ["Python", "Flask", "PostgreSQL"],
-    },
-    {
-      title: "Junior Software Engineer",
-      company: "CodeStack",
-      location: "Remote",
-      match: 81,
-      technologies: ["JavaScript", "React", "REST API"],
-    },
-  ];
+  const [jobs, setJobs] = useState([]);
 
   const handleSaveJob = (jobTitle) => {
     if (savedJobs.includes(jobTitle)) {
