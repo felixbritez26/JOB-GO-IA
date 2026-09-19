@@ -1,7 +1,8 @@
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route("/api")
 def home():
@@ -35,6 +36,21 @@ def get_jobs():
     ]
 
     return jobs
+
+applications = [
+    {
+        "id": 1,
+        "company": "TechNova",
+        "position": "Junior Full Stack Developer",
+        "status": "Applied",
+        "date": "Sep 18, 2026"
+    }
+]
+
+
+@app.route("/api/applications")
+def get_applications():
+    return applications
 
 
 if __name__ == "__main__":

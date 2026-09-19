@@ -27,7 +27,7 @@ function Opportunities() {
   const [locationFilter, setLocationFilter] = useState("All");
   const [jobs, setJobs] = useState([]);
   useEffect(() => {
-    fetch("https://glowing-lamp-g4w96jjv67jv2g5w-5000.app.github.dev/")
+    fetch("https://glowing-lamp-g4w96jjv67jv2g5w-5000.app.github.dev/api/jobs")
       .then((response) => response.json())
       .then((data) => {
         setJobs(data);
