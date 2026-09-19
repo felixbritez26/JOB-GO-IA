@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -48,9 +48,25 @@ applications = [
 ]
 
 
-@app.route("/api/applications")
-def get_applications():
-    return applications
+@app.route("/api/applications", methods=["GET", "POST"])
+def handle_applications():
+    if request.method == "GET":
+        return applications
+
+    if request.method == "POST":
+        data = request.get_json()
+
+        new_application = {
+            "id": len(applications) + 1,
+            "company": data["company"],
+            "position": data["position"],
+            "status": data.get("status", "Applied"),
+            "date": data["date"]
+        }
+
+        applications.append(new_application)
+
+        return new_application, 201
 
 
 if __name__ == "__main__":
