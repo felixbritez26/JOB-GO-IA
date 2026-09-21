@@ -62,6 +62,22 @@ function Opportunities() {
       date: new Date().toLocaleDateString(),
     };
 
+    const response = await fetch(
+      "https://glowing-lamp-g4w96jjv67jv2g5w-5000.app.github.dev/api/applications",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newApplication),
+      },
+    );
+
+    if (!response.ok) {
+      console.error("Failed to create application");
+      return;
+    }
+
     const updatedApplications = [...applications, newApplication];
 
     localStorage.setItem("applications", JSON.stringify(updatedApplications));
