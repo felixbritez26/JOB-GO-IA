@@ -44,7 +44,7 @@ function Opportunities() {
       setSavedJobs([...savedJobs, jobTitle]);
     }
   };
-  const handleApplyJob = (job) => {
+  const handleApplyJob = async (job) => {
     if (appliedJobs.includes(job.title)) {
       return;
     }
