@@ -1,43 +1,22 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 
-const initialApplications = [
-  {
-    company: "TechNova",
-    position: "Junior Full Stack Developer",
-    status: "Applied",
-    date: "Sep 1, 2026",
-  },
-  {
-    company: "Pixel Labs",
-    position: "Frontend Developer",
-    status: "Interview",
-    date: "Aug 29, 2026",
-  },
-  {
-    company: "CloudWorks",
-    position: "Software Engineer",
-    status: "Rejected",
-    date: "Aug 25, 2026",
-  },
-];
-
 function Applications() {
-  const [applications, setApplications] = useState(() => {
-    const storedApplications = localStorage.getItem("applications");
-
-    return storedApplications
-      ? JSON.parse(storedApplications)
-      : initialApplications;
-  });
-
+  const [applications, setApplications] = useState([]);
   const [company, setCompany] = useState("");
   const [position, setPosition] = useState("");
   const [status, setStatus] = useState("Applied");
 
   useEffect(() => {
-    localStorage.setItem("applications", JSON.stringify(applications));
-  }, [applications]);
+    fetch("/api/applications")
+      .then((response) => response.json())
+      .then((data) => {
+        setApplications(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching applications:", error);
+      });
+  }, []);
 
   const handleAddApplication = (event) => {
     event.preventDefault();
