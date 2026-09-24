@@ -7,6 +7,7 @@ function Applications() {
   const [position, setPosition] = useState("");
   const [status, setStatus] = useState("Applied");
 
+  // GET applications from Flask
   useEffect(() => {
     fetch("/api/applications")
       .then((response) => response.json())
@@ -18,7 +19,8 @@ function Applications() {
       });
   }, []);
 
-  const handleAddApplication = (event) => {
+  // POST a new application to Flask
+  const handleAddApplication = async (event) => {
     event.preventDefault();
 
     const newApplication = {
@@ -28,13 +30,33 @@ function Applications() {
       date: new Date().toLocaleDateString(),
     };
 
-    setApplications([...applications, newApplication]);
+    try {
+      const response = await fetch("/api/applications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newApplication),
+      });
 
-    setCompany("");
-    setPosition("");
-    setStatus("Applied");
+      if (!response.ok) {
+        console.error("Failed to create application");
+        return;
+      }
+
+      const createdApplication = await response.json();
+
+      setApplications([...applications, createdApplication]);
+
+      setCompany("");
+      setPosition("");
+      setStatus("Applied");
+    } catch (error) {
+      console.error("Error creating application:", error);
+    }
   };
 
+  // Change status in React for now
   const handleStatusChange = (position, newStatus) => {
     const updatedApplications = applications.map((application) => {
       if (application.position === position) {
@@ -50,6 +72,7 @@ function Applications() {
     setApplications(updatedApplications);
   };
 
+  // Delete from React for now
   const handleDeleteApplication = (position) => {
     const updatedApplications = applications.filter(
       (application) => application.position !== position,
@@ -100,10 +123,15 @@ function Applications() {
           {applications.map((application) => (
             <div
               className="application-card"
-              key={`${application.company}-${application.position}`}
+              key={
+                application.id ||
+                `${application.company}-${application.position}`
+              }
             >
               <h3>{application.position}</h3>
+
               <p>{application.company}</p>
+
               <p>{application.date}</p>
 
               <span className={`status ${application.status.toLowerCase()}`}>
