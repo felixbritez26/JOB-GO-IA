@@ -89,12 +89,25 @@ function Applications() {
     }
   };
 
-  const handleDeleteApplication = (position) => {
-    const updatedApplications = applications.filter(
-      (application) => application.position !== position,
-    );
+  const handleDeleteApplication = async (applicationId) => {
+    try {
+      const response = await fetch(`/api/applications/${applicationId}`, {
+        method: "DELETE",
+      });
 
-    setApplications(updatedApplications);
+      if (!response.ok) {
+        console.error("Failed to delete application");
+        return;
+      }
+
+      const updatedApplications = applications.filter(
+        (application) => application.id !== applicationId,
+      );
+
+      setApplications(updatedApplications);
+    } catch (error) {
+      console.error("Error deleting application:", error);
+    }
   };
 
   return (
