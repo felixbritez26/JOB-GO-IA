@@ -56,23 +56,39 @@ function Applications() {
     }
   };
 
-  // Change status in React for now
-  const handleStatusChange = (position, newStatus) => {
-    const updatedApplications = applications.map((application) => {
-      if (application.position === position) {
-        return {
-          ...application,
+  const handleStatusChange = async (applicationId, newStatus) => {
+    try {
+      const response = await fetch(`/api/applications/${applicationId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           status: newStatus,
-        };
+        }),
+      });
+
+      if (!response.ok) {
+        console.error("Failed to update application");
+        return;
       }
 
-      return application;
-    });
+      const updatedApplication = await response.json();
 
-    setApplications(updatedApplications);
+      const updatedApplications = applications.map((application) => {
+        if (application.id === applicationId) {
+          return updatedApplication;
+        }
+
+        return application;
+      });
+
+      setApplications(updatedApplications);
+    } catch (error) {
+      console.error("Error updating application:", error);
+    }
   };
 
-  // Delete from React for now
   const handleDeleteApplication = (position) => {
     const updatedApplications = applications.filter(
       (application) => application.position !== position,
@@ -141,7 +157,7 @@ function Applications() {
               <select
                 value={application.status}
                 onChange={(event) =>
-                  handleStatusChange(application.position, event.target.value)
+                  handleStatusChange(application.id, event.target.value)
                 }
               >
                 <option value="Applied">Applied</option>

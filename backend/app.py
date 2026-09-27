@@ -72,6 +72,22 @@ def handle_applications():
         return new_application, 201
 
 
+@app.route("/api/applications/<int:application_id>", methods=["PUT"])
+def update_application(application_id):
+    data = request.get_json()
+
+    for application in applications:
+        if application["id"] == application_id:
+            application["status"] = data.get(
+                "status",
+                application["status"]
+            )
+
+            return application
+
+    return {"error": "Application not found"}, 404
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 
