@@ -181,7 +181,7 @@ function Applications() {
 
               <button
                 className="delete-application-btn"
-                onClick={() => handleDeleteApplication(application.position)}
+                onClick={() => handleDeleteApplication(application.id)}
               >
                 Delete
               </button>
