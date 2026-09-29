@@ -1,3 +1,4 @@
+from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request
 from flask_cors import CORS
 
