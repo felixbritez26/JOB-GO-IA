@@ -3,10 +3,32 @@ from flask import Flask, request
 from flask_cors import CORS
 
 app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///jobfinder.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
 CORS(
     app,
     resources={r"/api/*": {"origins": "*"}}
 )
+
+class Application(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    company = db.Column(db.String(120), nullable=False)
+    position = db.Column(db.String(120), nullable=False)
+    status = db.Column(db.String(50), nullable=False, default="Applied")
+    date = db.Column(db.String(50), nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "company": self.company,
+            "position": self.position,
+            "status": self.status,
+            "date": self.date,
+        }
 
 @app.route("/api")
 def home():
@@ -90,6 +112,8 @@ def update_application(application_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    with app.app_context():
+        db.create_all()
 
+    app.run(debug=True, port=5000)
     
