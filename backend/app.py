@@ -104,16 +104,19 @@ def handle_applications():
 def update_application(application_id):
     data = request.get_json()
 
-    for application in applications:
-        if application["id"] == application_id:
-            application["status"] = data.get(
-                "status",
-                application["status"]
-            )
+    application = db.session.get(Application, application_id)
 
-            return application
+    if application is None:
+        return {"error": "Application not found"}, 404
 
-    return {"error": "Application not found"}, 404
+    application.status = data.get(
+        "status",
+        application.status
+    )
+
+    db.session.commit()
+
+    return application.to_dict()
 
 
 if __name__ == "__main__":
