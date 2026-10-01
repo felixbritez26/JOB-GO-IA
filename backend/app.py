@@ -77,22 +77,27 @@ applications = [
 @app.route("/api/applications", methods=["GET", "POST"])
 def handle_applications():
     if request.method == "GET":
-        return applications
+        database_applications = Application.query.all()
+
+        return [
+            application.to_dict()
+            for application in database_applications
+        ]
 
     if request.method == "POST":
         data = request.get_json()
 
-        new_application = {
-            "id": len(applications) + 1,
-            "company": data["company"],
-            "position": data["position"],
-            "status": data.get("status", "Applied"),
-            "date": data["date"]
-        }
+        new_application = Application(
+            company=data["company"],
+            position=data["position"],
+            status=data.get("status", "Applied"),
+            date=data["date"]
+        )
 
-        applications.append(new_application)
+        db.session.add(new_application)
+        db.session.commit()
 
-        return new_application, 201
+        return new_application.to_dict(), 201
 
 
 @app.route("/api/applications/<int:application_id>", methods=["PUT"])
