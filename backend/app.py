@@ -118,6 +118,18 @@ def update_application(application_id):
 
     return application.to_dict()
 
+@app.route("/api/applications/<int:application_id>", methods=["DELETE"])
+def delete_application(application_id):
+    application = db.session.get(Application, application_id)
+
+    if application is None:
+        return {"error": "Application not found"}, 404
+
+    db.session.delete(application)
+    db.session.commit()
+
+    return {"message": "Application deleted"}
+
 
 if __name__ == "__main__":
     with app.app_context():
