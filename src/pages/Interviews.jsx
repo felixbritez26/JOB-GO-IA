@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 
 function Interviews() {
@@ -14,11 +14,17 @@ function Interviews() {
   const [notes, setNotes] = useState("");
   const [selectedInterview, setSelectedInterview] = useState(null);
 
-  const [applications] = useState(() => {
-    const storedApplications = localStorage.getItem("applications");
-
-    return storedApplications ? JSON.parse(storedApplications) : [];
-  });
+  const [applications, setApplications] = useState([]);
+  useEffect(() => {
+  fetch("/api/applications")
+    .then((response) => response.json())
+    .then((data) => {
+      setApplications(data);
+    })
+    .catch((error) => {
+      console.error("Error fetching applications:", error);
+    });
+}, []);
 
   const interviews = applications.filter(
     (application) => application.status === "Interview",
@@ -26,13 +32,14 @@ function Interviews() {
 
   const handleSaveInterview = (application) => {
     const interviewDetails = {
-      company: application.company,
-      position: application.position,
-      date: interviewDate,
-      time: interviewTime,
-      type: interviewType,
-      notes: notes,
-    };
+  applicationId: application.id,
+  company: application.company,
+  position: application.position,
+  date: interviewDate,
+  time: interviewTime,
+  type: interviewType,
+  notes: notes,
+};
 
     const interviewExists = scheduledInterviews.some(
       (interview) =>
