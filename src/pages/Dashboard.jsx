@@ -1,7 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import StatCard from "../components/StatCard";
 import JobCard from "../components/JobCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
   const [savedJobs] = useState(() => {
@@ -9,11 +9,18 @@ function Dashboard() {
 
     return storedJobs ? JSON.parse(storedJobs) : [];
   });
-  const [applications] = useState(() => {
-    const storedApplications = localStorage.getItem("applications");
 
-    return storedApplications ? JSON.parse(storedApplications) : [];
-  });
+  const [applications, setApplications] = useState([]);
+  useEffect(() => {
+    fetch("/api/applications")
+      .then((response) => response.json())
+      .then((data) => {
+        setApplications(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching applications:", error);
+      });
+  }, []);
 
   const interviewCount = applications.filter(
     (application) => application.status === "Interview",
