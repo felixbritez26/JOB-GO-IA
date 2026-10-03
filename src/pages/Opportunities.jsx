@@ -9,18 +9,22 @@ function Opportunities() {
   const [locationFilter, setLocationFilter] = useState("All");
   const [jobs, setJobs] = useState([]);
 
+  const [skills] = useState(() => {
+    const storedSkills = localStorage.getItem("skills");
+
+    return storedSkills ? JSON.parse(storedSkills) : [];
+  });
+
   const [savedJobs, setSavedJobs] = useState(() => {
     const storedJobs = localStorage.getItem("savedJobs");
 
     return storedJobs ? JSON.parse(storedJobs) : [];
   });
 
-  // Save saved jobs to localStorage
   useEffect(() => {
     localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
   }, [savedJobs]);
 
-  // Get jobs from Flask
   useEffect(() => {
     fetch("/api/jobs")
       .then((response) => response.json())
@@ -32,14 +36,11 @@ function Opportunities() {
       });
   }, []);
 
-  // Get applications from the database
   useEffect(() => {
     fetch("/api/applications")
       .then((response) => response.json())
       .then((data) => {
-        const positions = data.map(
-          (application) => application.position
-        );
+        const positions = data.map((application) => application.position);
 
         setAppliedJobs(positions);
       })
@@ -90,6 +91,22 @@ function Opportunities() {
     }
   };
 
+  const calculateMatch = (job) => {
+    if (job.technologies.length === 0) {
+      return 0;
+    }
+
+    const totalScore = job.technologies.reduce((total, technology) => {
+      const matchingSkill = skills.find(
+        (skill) => skill.name.toLowerCase() === technology.toLowerCase(),
+      );
+
+      return total + (matchingSkill ? matchingSkill.level : 0);
+    }, 0);
+
+    return Math.round(totalScore / job.technologies.length);
+  };
+
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch = job.title
       .toLowerCase()
@@ -99,8 +116,7 @@ function Opportunities() {
       locationFilter === "All" || job.location === locationFilter;
 
     const matchesTechnology =
-      technologyFilter === "All" ||
-      job.technologies.includes(technologyFilter);
+      technologyFilter === "All" || job.technologies.includes(technologyFilter);
 
     return matchesSearch && matchesLocation && matchesTechnology;
   });
@@ -151,7 +167,7 @@ function Opportunities() {
                 title={job.title}
                 company={job.company}
                 location={job.location}
-                match={job.match}
+                match={calculateMatch(job)}
                 technologies={job.technologies}
                 onSave={() => handleSaveJob(job.title)}
                 saved={savedJobs.includes(job.title)}

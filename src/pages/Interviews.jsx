@@ -15,6 +15,8 @@ function Interviews() {
   const [selectedInterview, setSelectedInterview] = useState(null);
 
   const [applications, setApplications] = useState([]);
+
+  // Get applications from Flask
   useEffect(() => {
     fetch("/api/applications")
       .then((response) => response.json())
@@ -26,10 +28,12 @@ function Interviews() {
       });
   }, []);
 
+  // Only show applications with Interview status
   const interviews = applications.filter(
     (application) => application.status === "Interview",
   );
 
+  // Save or update an interview
   const handleSaveInterview = (application) => {
     const interviewDetails = {
       applicationId: application.id,
@@ -73,11 +77,10 @@ function Interviews() {
     setNotes("");
   };
 
+  // Open the interview form
   const handleOpenInterview = (application) => {
     const existingInterview = scheduledInterviews.find(
-      (interview) =>
-        interview.company === application.company &&
-        interview.position === application.position,
+      (interview) => interview.applicationId === application.id,
     );
 
     if (existingInterview) {
@@ -92,9 +95,10 @@ function Interviews() {
       setNotes("");
     }
 
-    setSelectedInterview(application.position);
+    setSelectedInterview(application.id);
   };
 
+  // Close the interview form
   const handleCancelInterview = () => {
     setSelectedInterview(null);
     setInterviewDate("");
@@ -102,13 +106,11 @@ function Interviews() {
     setInterviewType("Video Call");
     setNotes("");
   };
+
+  // Delete scheduled interview information
   const handleDeleteInterview = (application) => {
     const updatedInterviews = scheduledInterviews.filter(
-      (interview) =>
-        !(
-          interview.company === application.company &&
-          interview.position === application.position
-        ),
+      (interview) => interview.applicationId !== application.id,
     );
 
     setScheduledInterviews(updatedInterviews);
@@ -132,31 +134,43 @@ function Interviews() {
             interviews.map((application) => (
               <div
                 className="application-card"
-                key={`${application.company}-${application.position}`}
+                key={application.id}
               >
                 <h3>{application.position}</h3>
+
                 <p>{application.company}</p>
+
                 <p>{application.date}</p>
 
-                <span className="status interview">Interview</span>
+                <span className="status interview">
+                  Interview
+                </span>
 
                 {scheduledInterviews
                   .filter(
                     (interview) =>
-                      interview.company === application.company &&
-                      interview.position === application.position,
+                      interview.applicationId === application.id,
                   )
-                  .map((interview, index) => (
-                    <div className="interview-details" key={index}>
+                  .map((interview) => (
+                    <div
+                      className="interview-details"
+                      key={interview.applicationId}
+                    >
                       <p>Date: {interview.date}</p>
+
                       <p>Time: {interview.time}</p>
+
                       <p>Type: {interview.type}</p>
 
-                      {interview.notes && <p>Notes: {interview.notes}</p>}
+                      {interview.notes && (
+                        <p>Notes: {interview.notes}</p>
+                      )}
 
                       <button
                         className="delete-interview-btn"
-                        onClick={() => handleDeleteInterview(application)}
+                        onClick={() =>
+                          handleDeleteInterview(application)
+                        }
                       >
                         Delete Interview
                       </button>
@@ -165,47 +179,68 @@ function Interviews() {
 
                 <button
                   className="schedule-interview-btn"
-                  onClick={() => handleOpenInterview(application)}
+                  onClick={() =>
+                    handleOpenInterview(application)
+                  }
                 >
                   {scheduledInterviews.some(
                     (interview) =>
-                      interview.company === application.company &&
-                      interview.position === application.position,
+                      interview.applicationId === application.id,
                   )
                     ? "Edit Interview"
                     : "Schedule Interview"}
                 </button>
 
-                {selectedInterview === application.position && (
+                {selectedInterview === application.id && (
                   <div className="interview-form">
                     <input
                       type="date"
                       value={interviewDate}
-                      onChange={(event) => setInterviewDate(event.target.value)}
+                      onChange={(event) =>
+                        setInterviewDate(event.target.value)
+                      }
                     />
 
                     <input
                       type="time"
                       value={interviewTime}
-                      onChange={(event) => setInterviewTime(event.target.value)}
+                      onChange={(event) =>
+                        setInterviewTime(event.target.value)
+                      }
                     />
 
                     <select
                       value={interviewType}
-                      onChange={(event) => setInterviewType(event.target.value)}
+                      onChange={(event) =>
+                        setInterviewType(event.target.value)
+                      }
                     >
-                      <option value="Video Call">Video Call</option>
-                      <option value="Phone Call">Phone Call</option>
-                      <option value="In Person">In Person</option>
+                      <option value="Video Call">
+                        Video Call
+                      </option>
+
+                      <option value="Phone Call">
+                        Phone Call
+                      </option>
+
+                      <option value="In Person">
+                        In Person
+                      </option>
                     </select>
 
                     <textarea
                       placeholder="Notes..."
                       value={notes}
-                      onChange={(event) => setNotes(event.target.value)}
+                      onChange={(event) =>
+                        setNotes(event.target.value)
+                      }
                     />
 
-                    <button onClick={() => handleSaveInterview(application)}>
+                    <button
+                      onClick={() =>
+                        handleSaveInterview(application)
+                      }
+                    >
                       Save Interview
                     </button>
 
