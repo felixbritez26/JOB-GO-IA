@@ -16,15 +16,15 @@ function Interviews() {
 
   const [applications, setApplications] = useState([]);
   useEffect(() => {
-  fetch("/api/applications")
-    .then((response) => response.json())
-    .then((data) => {
-      setApplications(data);
-    })
-    .catch((error) => {
-      console.error("Error fetching applications:", error);
-    });
-}, []);
+    fetch("/api/applications")
+      .then((response) => response.json())
+      .then((data) => {
+        setApplications(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching applications:", error);
+      });
+  }, []);
 
   const interviews = applications.filter(
     (application) => application.status === "Interview",
@@ -32,29 +32,24 @@ function Interviews() {
 
   const handleSaveInterview = (application) => {
     const interviewDetails = {
-  applicationId: application.id,
-  company: application.company,
-  position: application.position,
-  date: interviewDate,
-  time: interviewTime,
-  type: interviewType,
-  notes: notes,
-};
+      applicationId: application.id,
+      company: application.company,
+      position: application.position,
+      date: interviewDate,
+      time: interviewTime,
+      type: interviewType,
+      notes: notes,
+    };
 
     const interviewExists = scheduledInterviews.some(
-      (interview) =>
-        interview.company === application.company &&
-        interview.position === application.position,
+      (interview) => interview.applicationId === application.id,
     );
 
     let updatedInterviews;
 
     if (interviewExists) {
       updatedInterviews = scheduledInterviews.map((interview) => {
-        if (
-          interview.company === application.company &&
-          interview.position === application.position
-        ) {
+        if (interview.applicationId === application.id) {
           return interviewDetails;
         }
 
