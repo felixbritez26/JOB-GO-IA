@@ -2,6 +2,7 @@ import Sidebar from "../components/Sidebar";
 import StatCard from "../components/StatCard";
 import JobCard from "../components/JobCard";
 import { useEffect, useState } from "react";
+import AIAssistant from "../components/AIAssistant";
 
 function Dashboard() {
   const [savedJobs] = useState(() => {
@@ -99,6 +100,8 @@ function Dashboard() {
             />
           </div>
         </section>
+
+        <AIAssistant />
       </main>
     </div>
   );

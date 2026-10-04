@@ -63,15 +63,6 @@ def get_jobs():
 
     return jobs
 
-applications = [
-    {
-        "id": 1,
-        "company": "TechNova",
-        "position": "Junior Full Stack Developer",
-        "status": "Applied",
-        "date": "Sep 18, 2026"
-    }
-]
 
 
 @app.route("/api/applications", methods=["GET", "POST"])
@@ -129,6 +120,20 @@ def delete_application(application_id):
     db.session.commit()
 
     return {"message": "Application deleted"}
+
+
+@app.route("/api/ai-assistant", methods=["POST"])
+def ai_assistant():
+    data = request.get_json()
+
+    message = data.get("message", "")
+
+    if not message:
+        return {"error": "Message is required"}, 400
+
+    return {
+        "reply": f"I received your message: {message}"
+    }
 
 
 if __name__ == "__main__":

@@ -107,6 +107,28 @@ function Opportunities() {
     return Math.round(totalScore / job.technologies.length);
   };
 
+  const getSkillAnalysis = (job) => {
+    const matchedSkills = [];
+    const missingSkills = [];
+
+    job.technologies.forEach((technology) => {
+      const skillExists = skills.some(
+        (skill) => skill.name.toLowerCase() === technology.toLowerCase(),
+      );
+
+      if (skillExists) {
+        matchedSkills.push(technology);
+      } else {
+        missingSkills.push(technology);
+      }
+    });
+
+    return {
+      matchedSkills,
+      missingSkills,
+    };
+  };
+
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch = job.title
       .toLowerCase()
@@ -169,6 +191,8 @@ function Opportunities() {
                 location={job.location}
                 match={calculateMatch(job)}
                 technologies={job.technologies}
+                matchedSkills={getSkillAnalysis(job).matchedSkills}
+                missingSkills={getSkillAnalysis(job).missingSkills}
                 onSave={() => handleSaveJob(job.title)}
                 saved={savedJobs.includes(job.title)}
                 onApply={() => handleApplyJob(job)}

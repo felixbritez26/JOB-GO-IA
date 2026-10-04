@@ -4,6 +4,8 @@ function JobCard({
   location,
   match,
   technologies,
+  matchedSkills,
+  missingSkills,
   onSave,
   saved,
   onApply,
@@ -40,6 +42,19 @@ function JobCard({
         {technologies.map((technology) => (
           <span key={technology}>{technology}</span>
         ))}
+      </div>
+      <div className="skill-analysis">
+        {matchedSkills && matchedSkills.length > 0 && (
+          <p className="matched-skills">
+            ✓ Matched: {matchedSkills.join(", ")}
+          </p>
+        )}
+
+        {missingSkills && missingSkills.length > 0 && (
+          <p className="missing-skills">
+            ✗ Missing: {missingSkills.join(", ")}
+          </p>
+        )}
       </div>
     </div>
   );
