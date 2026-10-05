@@ -1,8 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request
 from flask_cors import CORS
+from openai import OpenAI
 
 app = Flask(__name__)
+
+client = OpenAI()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///jobfinder.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -131,9 +134,28 @@ def ai_assistant():
     if not message:
         return {"error": "Message is required"}, 400
 
-    return {
-        "reply": f"I received your message: {message}"
-    }
+    try:
+        response = client.responses.create(
+            model="gpt-5-mini",
+            instructions=(
+                "You are an AI career assistant. "
+                "Help users with software development careers, "
+                "job searching, technical skills, resumes, and interviews. "
+                "Keep your answers clear, practical, and concise."
+            ),
+            input=message
+        )
+
+        return {
+            "reply": response.output_text
+        }
+
+    except Exception as error:
+        print("OpenAI error:", error)
+
+        return {
+            "error": "Failed to get AI response"
+        }, 500
 
 
 if __name__ == "__main__":
