@@ -134,9 +134,15 @@ def ai_assistant():
     data = request.get_json()
 
     message = data.get("message", "")
+    skills = data.get("skills", [])
 
     if not message:
         return {"error": "Message is required"}, 400
+
+    skills_text = ", ".join(
+        f"{skill.get('name')} ({skill.get('level')})"
+        for skill in skills
+    )
 
     try:
         response = client.chat.completions.create(
@@ -145,10 +151,12 @@ def ai_assistant():
                 {
                     "role": "system",
                     "content": (
-                        "You are an AI career assistant. "
-                        "Help users with software development careers, "
-                        "job searching, technical skills, resumes, and interviews. "
-                        "Keep your answers clear, practical, and concise."
+                        "You are an AI career assistant for a software developer. "
+                        "Help the user with job searching, technical skills, "
+                        "resumes, career planning, and interviews. "
+                        "Give practical and concise advice. "
+                        f"The user's current technical skills are: {skills_text}. "
+                        "Use these skills when giving career advice."
                     )
                 },
                 {
