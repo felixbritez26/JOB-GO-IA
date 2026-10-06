@@ -1,3 +1,4 @@
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request
 from flask_cors import CORS
@@ -5,7 +6,10 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-client = OpenAI()
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY")
+)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///jobfinder.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -135,23 +139,31 @@ def ai_assistant():
         return {"error": "Message is required"}, 400
 
     try:
-        response = client.responses.create(
-            model="gpt-5-mini",
-            instructions=(
-                "You are an AI career assistant. "
-                "Help users with software development careers, "
-                "job searching, technical skills, resumes, and interviews. "
-                "Keep your answers clear, practical, and concise."
-            ),
-            input=message
+        response = client.chat.completions.create(
+            model="openrouter/free",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are an AI career assistant. "
+                        "Help users with software development careers, "
+                        "job searching, technical skills, resumes, and interviews. "
+                        "Keep your answers clear, practical, and concise."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": message
+                }
+            ]
         )
 
         return {
-            "reply": response.output_text
+            "reply": response.choices[0].message.content
         }
 
     except Exception as error:
-        print("OpenAI error:", error)
+        print("OpenRouter error:", error)
 
         return {
             "error": "Failed to get AI response"
