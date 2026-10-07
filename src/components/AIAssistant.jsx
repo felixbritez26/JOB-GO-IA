@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 function AIAssistant() {
   const [message, setMessage] = useState("");
@@ -169,7 +170,9 @@ function AIAssistant() {
                 {chatMessage.role === "user" ? "F" : "AI"}
               </div>
 
-              <div className="ai-chat-bubble">{chatMessage.content}</div>
+              <div className="ai-chat-bubble">
+                <ReactMarkdown>{chatMessage.content}</ReactMarkdown>
+              </div>
             </div>
           ))}
 
