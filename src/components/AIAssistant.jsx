@@ -33,6 +33,7 @@ function AIAssistant() {
         body: JSON.stringify({
           message: textToSend,
           skills: skills,
+          history: messages,
         }),
       });
 
