@@ -131,10 +131,11 @@ def delete_application(application_id):
 
 @app.route("/api/ai-assistant", methods=["POST"])
 def ai_assistant():
-    data = request.get_json()
+    data = request.get_json() or {}
 
     message = data.get("message", "")
     skills = data.get("skills", [])
+    history = data.get("history", [])
 
     if not message:
         return {"error": "Message is required"}, 400
@@ -143,6 +144,18 @@ def ai_assistant():
         f"{skill.get('name')} ({skill.get('level')})"
         for skill in skills
     )
+
+    conversation_history = []
+
+    for chat_message in history:
+        role = chat_message.get("role")
+        content = chat_message.get("content")
+
+        if role in ["user", "assistant"] and content:
+            conversation_history.append({
+                "role": role,
+                "content": content
+            })
 
     try:
         response = client.chat.completions.create(
@@ -159,6 +172,7 @@ def ai_assistant():
                         "Use these skills when giving career advice."
                     )
                 },
+                *conversation_history,
                 {
                     "role": "user",
                     "content": message
