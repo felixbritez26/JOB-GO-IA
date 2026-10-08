@@ -1,10 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
 function AIAssistant() {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(() => {
+    const savedMessages = localStorage.getItem("aiChatHistory");
+
+    if (!savedMessages) return [];
+
+    try {
+      return JSON.parse(savedMessages);
+    } catch {
+      return [];
+    }
+  });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("aiChatHistory", JSON.stringify(messages));
+  }, [messages]);
 
   const handleSendMessage = async (customMessage = null) => {
     const skills = JSON.parse(localStorage.getItem("skills")) || [];
@@ -101,7 +115,11 @@ function AIAssistant() {
             Online
           </div>
 
-          <button className="ai-new-chat" onClick={startNewChat}>
+          <button
+            className="ai-new-chat"
+            onClick={startNewChat}
+            disabled={loading}
+          >
             <span>＋</span>
             New Chat
           </button>
