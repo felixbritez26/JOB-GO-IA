@@ -40,6 +40,14 @@ function AIAssistant() {
     setLoading(true);
 
     try {
+      const applicationsResponse = await fetch("/api/applications");
+
+      if (!applicationsResponse.ok) {
+        throw new Error("Failed to load applications");
+      }
+
+      const applications = await applicationsResponse.json();
+
       const response = await fetch("/api/ai-assistant", {
         method: "POST",
         headers: {
@@ -49,6 +57,7 @@ function AIAssistant() {
           message: textToSend,
           skills: skills,
           history: messages,
+          applications: applications,
         }),
       });
 

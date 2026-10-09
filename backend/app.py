@@ -136,6 +136,7 @@ def ai_assistant():
     message = data.get("message", "")
     skills = data.get("skills", [])
     history = data.get("history", [])
+    applications = data.get("applications", [])
 
     if not message:
         return {"error": "Message is required"}, 400
@@ -144,6 +145,16 @@ def ai_assistant():
         f"{skill.get('name')} ({skill.get('level')})"
         for skill in skills
     )
+
+    
+    applications_text = "\n".join(
+        f"- {application.get('company')} | "
+        f"{application.get('position')} | "
+        f"Status: {application.get('status')} | "
+        f"Date: {application.get('date')}"
+        for application in applications
+    )
+
 
     conversation_history = []
 
@@ -163,14 +174,28 @@ def ai_assistant():
             messages=[
                 {
                     "role": "system",
+                    
                     "content": (
                         "You are an AI career assistant for a software developer. "
                         "Help the user with job searching, technical skills, "
                         "resumes, career planning, and interviews. "
                         "Give practical and concise advice. "
                         f"The user's current technical skills are: {skills_text}. "
-                        "Use these skills when giving career advice."
+                        "Use these skills when giving career advice. "
+                        f"\nThe user has {len(applications)} saved job applications. "
+                        f"\nApplication details:\n{applications_text or 'No applications saved.'} "
+                        "Use this information when discussing application progress. "
+                        "When the user asks about their job applications, "
+                        "analyze the saved application statuses and dates. "
+                        "Identify applications that may need follow-up. "
+                        "Suggest practical next steps for improving interview chances. "
+                        "Do not invent applications, interview outcomes, or company responses. "
+                        "If application dates are missing or unclear, explain the uncertainty. "
+                        "Do not claim that an application needs follow-up solely because it is old "
+                        "if its status indicates rejection, withdrawal, or completion."
+
                     )
+
                 },
                 *conversation_history,
                 {
