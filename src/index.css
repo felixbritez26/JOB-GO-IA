@@ -1158,3 +1158,122 @@ body {
     width: 100%;
   }
 }
+
+.ai-chat-bubble {
+  overflow-x: auto;
+}
+
+.ai-chat-bubble table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+}
+
+.ai-chat-bubble th,
+.ai-chat-bubble td {
+  padding: 10px 12px;
+  border: 1px solid #24453c;
+  text-align: left;
+}
+
+.ai-chat-bubble th {
+  background: #103b2e;
+  color: #21e6a0;
+}
+
+.ai-chat-bubble tr:nth-child(even) {
+  background: rgba(16, 59, 46, 0.25);
+}
+
+/* AI Analyze Applications Button */
+
+.ai-analyze-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 12px 20px;
+  border: 1px solid #00e59b;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 229, 155, 0.15),
+    rgba(0, 229, 155, 0.03)
+  );
+
+  color: #dffff4;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.ai-analyze-icon {
+  color: #00ffae;
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.ai-analyze-btn:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 229, 155, 0.28),
+    rgba(0, 229, 155, 0.08)
+  );
+
+  border-color: #35ffc0;
+  box-shadow:
+    0 0 15px rgba(0, 255, 170, 0.2),
+    0 0 30px rgba(0, 255, 170, 0.08);
+
+  transform: translateY(-2px);
+}
+
+.ai-analyze-btn:hover:not(:disabled) .ai-analyze-icon {
+  transform: rotate(45deg) scale(1.15);
+}
+
+.ai-analyze-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ai-analyze-btn:focus-visible {
+  outline: 2px solid #6fffd0;
+  outline-offset: 3px;
+}
+
+.ai-analyze-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Responsive header */
+@media (max-width: 900px) {
+  .career-ai-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .ai-analyze-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-analyze-btn,
+  .ai-analyze-icon {
+    transition: none;
+  }
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 function AIAssistant() {
   const [message, setMessage] = useState("");
@@ -125,6 +126,19 @@ function AIAssistant() {
           </div>
 
           <button
+            className="ai-analyze-btn"
+            onClick={() =>
+              handleSendMessage(
+                "Analyze my saved job applications. Tell me which ones may need follow-up, explain why, and recommend my next three actions.",
+              )
+            }
+            disabled={loading}
+          >
+            <span className="ai-analyze-icon">✦</span>
+            <span>Analyze Applications</span>
+          </button>
+
+          <button
             className="ai-new-chat"
             onClick={startNewChat}
             disabled={loading}
@@ -198,7 +212,9 @@ function AIAssistant() {
               </div>
 
               <div className="ai-chat-bubble">
-                <ReactMarkdown>{chatMessage.content}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {chatMessage.content}
+                </ReactMarkdown>
               </div>
             </div>
           ))}
