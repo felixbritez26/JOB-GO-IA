@@ -1,4 +1,4 @@
 Flask
 flask-cors
 flask-sqlalchemy
-psycopg2-binary
+psycopg2-binarypytest==9.1.1
