@@ -3,8 +3,21 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request
 from flask_cors import CORS
 from openai import OpenAI
+from flask_jwt_extended import JWTManager, create_access_token
+from flask_bcrypt import Bcrypt
+
 
 app = Flask(__name__)
+
+
+
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+
+if not app.config["JWT_SECRET_KEY"]:
+    raise RuntimeError("JWT_SECRET_KEY is not configured")
+
+jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
 
 
 def get_ai_client():
