@@ -60,6 +60,44 @@ class User(db.Model):
         )
 
 
+@app.route("/api/register", methods=["POST"])
+def register():
+    data = request.get_json(silent=True) or {}
+
+    email = data.get("email")
+    password = data.get("password")
+
+    if not isinstance(email, str) or not isinstance(password, str):
+        return {"error": "Email and password are required"}, 400
+
+    email = email.strip().lower()
+
+    if not email or not password:
+        return {"error": "Email and password are required"}, 400
+
+    if len(password) < 8:
+        return {"error": "Password must have at least 8 characters"}, 400
+
+    existing_user = User.query.filter_by(email=email).first()
+
+    if existing_user:
+        return {"error": "Email already registered"}, 409
+
+    new_user = User(email=email)
+    new_user.set_password(password)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return {
+        "message": "User registered successfully",
+        "user": {
+            "id": new_user.id,
+            "email": new_user.email
+        }
+    }, 201
+
+
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company = db.Column(db.String(120), nullable=False)
