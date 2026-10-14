@@ -97,6 +97,38 @@ def register():
         }
     }, 201
 
+    
+@app.route("/api/login", methods=["POST"])
+def login():
+    data = request.get_json(silent=True) or {}
+
+    email = data.get("email")
+    password = data.get("password")
+
+    if not isinstance(email, str) or not isinstance(password, str):
+        return {"error": "Email and password are required"}, 400
+
+    email = email.strip().lower()
+
+    if not email or not password:
+        return {"error": "Email and password are required"}, 400
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user or not user.check_password(password):
+        return {"error": "Invalid email or password"}, 401
+
+    access_token = create_access_token(identity=str(user.id))
+
+    return {
+        "message": "Login successful",
+        "access_token": access_token,
+        "user": {
+            "id": user.id,
+            "email": user.email
+        }
+    }, 200
+
 
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
