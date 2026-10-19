@@ -3,7 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request
 from flask_cors import CORS
 from openai import OpenAI
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import (
+    JWTManager,
+    create_access_token,
+    jwt_required
+)
 from flask_bcrypt import Bcrypt
 
 
@@ -182,6 +186,7 @@ def get_jobs():
 
 
 @app.route("/api/applications", methods=["GET", "POST"])
+@jwt_required()
 def handle_applications():
     if request.method == "GET":
         database_applications = Application.query.all()
