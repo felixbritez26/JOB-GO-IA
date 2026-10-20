@@ -6,7 +6,8 @@ from openai import OpenAI
 from flask_jwt_extended import (
     JWTManager,
     create_access_token,
-    jwt_required
+    jwt_required,
+    get_jwt_identity
 )
 from flask_bcrypt import Bcrypt
 
@@ -134,12 +135,19 @@ def login():
     }, 200
 
 
+
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company = db.Column(db.String(120), nullable=False)
     position = db.Column(db.String(120), nullable=False)
     status = db.Column(db.String(50), nullable=False, default="Applied")
     date = db.Column(db.String(50), nullable=False)
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=True
+    )
 
     def to_dict(self):
         return {
@@ -149,6 +157,7 @@ class Application(db.Model):
             "status": self.status,
             "date": self.date,
         }
+
 
 @app.route("/api")
 def home():
@@ -213,6 +222,7 @@ def handle_applications():
 
 
 @app.route("/api/applications/<int:application_id>", methods=["PUT"])
+@jwt_required()
 def update_application(application_id):
     data = request.get_json()
 
@@ -231,6 +241,7 @@ def update_application(application_id):
     return application.to_dict()
 
 @app.route("/api/applications/<int:application_id>", methods=["DELETE"])
+@jwt_required()
 def delete_application(application_id):
     application = db.session.get(Application, application_id)
 
