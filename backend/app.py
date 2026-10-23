@@ -327,7 +327,11 @@ def handle_applications():
             "date"
         )
 
-        if not all(data.get(field) for field in required_fields):
+        if not all(
+    isinstance(data.get(field), str)
+    and data[field].strip()
+    for field in required_fields
+):
             return {
                 "error": "Company, position and date are required"
             }, 400
@@ -420,10 +424,8 @@ def delete_application(application_id):
 # AI CAREER ASSISTANT
 # =====================================
 
-@app.route(
-    "/api/ai-assistant",
-    methods=["POST"]
-)
+@app.route("/api/ai-assistant", methods=["POST"])
+@jwt_required()
 def ai_assistant():
 
     data = request.get_json(silent=True) or {}
