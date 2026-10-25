@@ -41,7 +41,17 @@ function AIAssistant() {
     setLoading(true);
 
     try {
-      const applicationsResponse = await fetch("/api/applications");
+      const token = localStorage.getItem("access_token");
+
+      if (!token) {
+        throw new Error("Please log in first");
+      }
+
+      const applicationsResponse = await fetch("/api/applications", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!applicationsResponse.ok) {
         throw new Error("Failed to load applications");
@@ -53,6 +63,7 @@ function AIAssistant() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           message: textToSend,
