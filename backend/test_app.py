@@ -1,6 +1,7 @@
 
 import pytest
-from app import app, db
+from flask_jwt_extended import create_access_token
+from app import app, db, User
 
 
 @pytest.fixture
@@ -8,7 +9,7 @@ def client(tmp_path):
     app.config["TESTING"] = True
 
     with app.app_context():
-        # Create a separate SQLite database for testing.
+        # Use a separate SQLite database for testing.
         test_engine = db.create_engine(
             f"sqlite:///{tmp_path / 'test_jobfinder.db'}"
         )
@@ -26,6 +27,22 @@ def client(tmp_path):
             db.drop_all()
             db.engines[None] = original_engine
             test_engine.dispose()
+
+
+@pytest.fixture
+def auth_headers(client):
+    # Create a user in the isolated test database.
+    with app.app_context():
+        user = User(
+            email="testuser@example.com",
+            password="test-password"
+        )
+        db.session.add(user)
+        db.session.commit()
+
+        token = create_access_token(identity=str(user.id))
+
+    return {"Authorization": f"Bearer {token}"}
 
 
 def test_api_home(client):
@@ -48,9 +65,10 @@ def test_get_jobs(client):
     assert len(jobs) > 0
 
 
-def test_create_application(client):
+def test_create_application(client, auth_headers):
     response = client.post(
         "/api/applications",
+        headers=auth_headers,
         json={
             "company": "Test Company",
             "position": "Junior Developer",
@@ -63,9 +81,10 @@ def test_create_application(client):
     assert response.get_json()["company"] == "Test Company"
 
 
-def test_get_applications(client):
-    client.post(
+def test_get_applications(client, auth_headers):
+    created = client.post(
         "/api/applications",
+        headers=auth_headers,
         json={
             "company": "Google",
             "position": "Frontend Developer",
@@ -73,24 +92,34 @@ def test_get_applications(client):
         }
     )
 
-    response = client.get("/api/applications")
+    assert created.status_code == 201
+
+    response = client.get(
+        "/api/applications",
+        headers=auth_headers
+    )
 
     assert response.status_code == 200
     assert len(response.get_json()) == 1
 
 
-def test_update_application(client):
-    created = client.post(
+def test_update_application(client, auth_headers):
+    created_response = client.post(
         "/api/applications",
+        headers=auth_headers,
         json={
             "company": "TechNova",
             "position": "Full Stack Developer",
             "date": "2026-10-11"
         }
-    ).get_json()
+    )
+
+    assert created_response.status_code == 201
+    created = created_response.get_json()
 
     response = client.put(
         f"/api/applications/{created['id']}",
+        headers=auth_headers,
         json={"status": "Interview"}
     )
 
@@ -98,19 +127,31 @@ def test_update_application(client):
     assert response.get_json()["status"] == "Interview"
 
 
-def test_delete_application(client):
-    created = client.post(
+def test_delete_application(client, auth_headers):
+    created_response = client.post(
         "/api/applications",
+        headers=auth_headers,
         json={
             "company": "Pixel Labs",
             "position": "Frontend Developer",
             "date": "2026-10-11"
         }
-    ).get_json()
+    )
+
+    assert created_response.status_code == 201
+    created = created_response.get_json()
 
     response = client.delete(
-        f"/api/applications/{created['id']}"
+        f"/api/applications/{created['id']}",
+        headers=auth_headers
     )
 
     assert response.status_code == 200
-    assert client.get("/api/applications").get_json() == []
+
+    remaining = client.get(
+        "/api/applications",
+        headers=auth_headers
+    )
+
+    assert remaining.status_code == 200
+    assert remaining.get_json() == []
