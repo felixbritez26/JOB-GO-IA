@@ -61,6 +61,7 @@ def get_ai_client():
 # USER MODEL
 # =====================================
 
+
 class User(db.Model):
     id = db.Column(
         db.Integer,
@@ -88,6 +89,7 @@ class User(db.Model):
             self.password_hash,
             password
         )
+
 
 
 # =====================================
