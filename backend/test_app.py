@@ -165,3 +165,87 @@ def test_applications_require_login(client):
 
     assert response.status_code == 401
 
+
+    def test_users_cannot_see_other_applications(client, auth_headers):
+    # User A creates an application.
+    created = client.post(
+        "/api/applications",
+        headers=auth_headers,
+        json={
+            "company": "Google",
+            "position": "Full Stack Developer",
+            "date": "2026-10-29"
+        }
+    )
+
+    assert created.status_code == 201
+
+    # Create a token for a different user.
+    with app.app_context():
+        other_user = User(
+            email="seconduser@example.com",
+            password_hash=bcrypt.generate_password_hash(
+                "TestPassword123!"
+            ).decode("utf-8")
+        )
+
+        db.session.add(other_user)
+        db.session.commit()
+
+        other_token = create_access_token(
+            identity=str(other_user.id)
+        )
+
+    # User B should not see User A's applications.
+    response = client.get(
+        "/api/applications",
+        headers={
+            "Authorization": f"Bearer {other_token}"
+        }
+    )
+
+    assert response.status_code == 200
+    assert response.get_json() == []
+
+
+def test_users_cannot_see_other_applications(client, auth_headers):
+    # User A creates an application.
+    created = client.post(
+        "/api/applications",
+        headers=auth_headers,
+        json={
+            "company": "Google",
+            "position": "Full Stack Developer",
+            "date": "2026-10-29"
+        }
+    )
+
+    assert created.status_code == 201
+
+    # Create a token for a different user.
+    with app.app_context():
+        other_user = User(
+            email="seconduser@example.com",
+            password_hash=bcrypt.generate_password_hash(
+                "TestPassword123!"
+            ).decode("utf-8")
+        )
+
+        db.session.add(other_user)
+        db.session.commit()
+
+        other_token = create_access_token(
+            identity=str(other_user.id)
+        )
+
+    # User B should not see User A's applications.
+    response = client.get(
+        "/api/applications",
+        headers={
+            "Authorization": f"Bearer {other_token}"
+        }
+    )
+
+    assert response.status_code == 200
+    assert response.get_json() == []
+
