@@ -2,6 +2,7 @@
 import pytest
 from flask_jwt_extended import create_access_token
 from app import app, db, User
+from app import app, db, User, bcrypt
 
 
 @pytest.fixture
@@ -34,9 +35,11 @@ def auth_headers(client):
     # Create a user in the isolated test database.
     with app.app_context():
         user = User(
-            email="testuser@example.com",
-            password="test-password"
-        )
+    email="testuser@example.com",
+    password_hash=bcrypt.generate_password_hash(
+        "test-password"
+    ).decode("utf-8")
+)
         db.session.add(user)
         db.session.commit()
 
@@ -155,3 +158,10 @@ def test_delete_application(client, auth_headers):
 
     assert remaining.status_code == 200
     assert remaining.get_json() == []
+
+
+def test_applications_require_login(client):
+    response = client.get("/api/applications")
+
+    assert response.status_code == 401
+
