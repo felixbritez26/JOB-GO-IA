@@ -166,7 +166,7 @@ def test_applications_require_login(client):
     assert response.status_code == 401
 
 
-    def test_users_cannot_see_other_applications(client, auth_headers):
+def test_users_cannot_see_other_applications(client, auth_headers):
     # User A creates an application.
     created = client.post(
         "/api/applications",
